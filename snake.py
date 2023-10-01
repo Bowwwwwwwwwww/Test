@@ -8,14 +8,16 @@ BG_COLOR = px.COLOR_BLACK
 SNAKE_COLOR = px.COLOR_WHITE
 # CONSTANTE pour la couleur de la nourriture
 FOOD_COLOR = px.COLOR_RED
-
+score = 0 
 def update():
-    global snake, dx, dy, food, loose
+    
+    global snake, dx, dy, food, loose, score
 
     if loose:
         if px.btnp(px.KEY_SPACE):
-            init_game()
+            test()
             loose = False
+            score = 0
         return 
 
     # Gestion des événements utilisateur
@@ -48,10 +50,17 @@ def update():
     # Vérifier si le serpent mange de la nourriture
     if new_tete == food:
         # on remet la "pomme"/nourriture a un endroit aleatoire de l'ecran 
+        
+        score = score+1
+        print(score)
         food= (random.randint(0, px.width - 1), random.randint(0, px.height - 1))
     else:
         # on retire pour permettre d'avancer 
         snake.pop()
+        score = score+1
+        txt = str(score)
+        print(txt)
+        px.text(5, 5, txt, px.COLOR_WHITE)
 
     # on ajoute la nouvelle tete a la deque 
     snake.appendleft(new_tete)
@@ -73,9 +82,9 @@ def draw():
         for segment in snake:
             px.pset(segment[0], segment[1], SNAKE_COLOR)
 
-def init_game():
-    global snake, dx, dy, food, loose
 
+def test():
+    global snake, dx, dy, food, loose
     # Coordonnées de départ du serpent (une deque de segments)
     snake = deque([(px.width // 2, px.height // 2)])
 
@@ -93,7 +102,9 @@ def init():
 
     px.init(25, 25, fps=10)  # Initialiser un écran de 50x50 pixels à 10 FPS
 
-    init_game()
+
+
+    test()
 
     px.run(update, draw)  # Lancer la boucle des fonctions update et draw
 
